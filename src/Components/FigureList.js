@@ -14,13 +14,20 @@ class FigureList extends Component {
     render() {
         const {figures} = this.props;
 
+        if (figures.length === 0) {
+            return (
+                <div className="alert alert-dark">Нет добавленных фигур</div>
+            );
+        } 
+
         return (
-            <Table striped bordered hover>
-                <thead>
+            <Table striped bordered hover size="sm">
+                <thead className="thead-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>TypeID</th>
-                        <th>Area</th>
+                        <th style={{width: '120px'}}>ID</th>
+                        <th>Тип</th>
+                        <th>Площадь</th>
+                        <th>Периметр</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +36,8 @@ class FigureList extends Component {
                             <tr key={figureItem.id}>
                                 <td>{figureItem.id}</td>
                                 <td>{figureItem.typeId}</td>
-                                <td>{figureItem.area}</td>
+                                <td>{figureItem.area.toFixed(2)}</td>
+                                <td>{figureItem.perimeter.toFixed(2)}</td>
                             </tr>
                         );
                     })}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import shortid from 'shortid';
 
 class FigureForm extends Component {
 
@@ -30,17 +30,18 @@ class FigureForm extends Component {
         this.setState({
             fields: {
                 ...this.state.fields,
-                [fieldId]: fieldValue
+                [fieldId]: parseFloat(fieldValue)
             }
         })
     }
 
     handleFormSubmit(event) {
         this.props.handleSubmit({
-            id: + new Date(),
+            id: shortid.generate(),
             typeId: this.state.figureId,
-            ...this.state.fields,
+            fields: this.state.fields,
             area: this.state.figureConfig.getArea(this.state.fields),
+            perimeter: this.state.figureConfig.getPerimeter(this.state.fields),
         });
         event.preventDefault();
     }
@@ -53,12 +54,17 @@ class FigureForm extends Component {
                 return (
                     <div className="form-group" key={fieldItem.id}>
                         <label>{fieldItem.title}</label>
-                        <input 
-                            type="text"
-                            className="form-control"
-                            onChange={(event) => this.handleFigureFiedUpdate(fieldItem.id, event.target.value)}
-                            value={this.state.fields[fieldItem.id] ? this.state.fields[fieldItem.id] : ""}
-                        />
+                        <div className="input-group input-group-sm">
+                            <input 
+                                type="text"
+                                className="form-control form-control-sm"
+                                onChange={(event) => this.handleFigureFiedUpdate(fieldItem.id, event.target.value)}
+                                value={this.state.fields[fieldItem.id] ? this.state.fields[fieldItem.id] : ""}
+                            />
+                            <div className="input-group-append">
+                                <span className="input-group-text">см</span>
+                            </div>
+                        </div>
                     </div>
                 );
             })
@@ -68,7 +74,7 @@ class FigureForm extends Component {
             <form className="form" onSubmit={this.handleFormSubmit}>
                 <div className="form-group">
                     <label>Фигура:</label>
-                    <select value={this.state.figureId} className="form-control" onChange={this.handleFigureChange}>
+                    <select value={this.state.figureId} className="form-control form-control-sm" onChange={this.handleFigureChange}>
                         <option value="">Выберите фигуру</option>
                         {this.props.typesConfig.map((figureItem) => {
                             return <option 
@@ -79,7 +85,7 @@ class FigureForm extends Component {
                     </select>
                 </div>
                 {figureFields}
-                <button type="submit" className="btn btn-primary btn-block" disabled={!this.state.figureId}>Добавить</button>
+                <button type="submit" className="btn btn-dark btn-block btn-sm" disabled={!this.state.figureId}>Добавить</button>
             </form>
         );
     }
